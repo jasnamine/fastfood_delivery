@@ -5,10 +5,10 @@ import {
   Route,
   Navigate,
 } from 'react-router-dom';
-import Category from './pages/Category';
-import Login from './pages/customerLogin/Login';
-import Register from './pages/customerLogin/Register';
-import CustomerHome from './pages/customerLogin/CustomerHome';
+import Category from './pages/merchant/Category';
+import Login from './pages/customer/Login';
+import Register from './pages/customer/Register';
+import CustomerHome from './pages/customer/CustomerHome';
 export const serverUrl = 'http://localhost:3000';
 
 function App() {
@@ -16,21 +16,19 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route
-          path="/login"
-          element={!user ? <Login /> : <Navigate to="/home" replace />}
-        />
-        <Route
-          path="/register"
-          element={!user ? <Register /> : <Navigate to="/home" replace />}
-        />
-        <Route
-          path="/home"
-          element={user ? <CustomerHome /> : <Navigate to="/login" replace />}
-        />
-      </Routes>
+      {/* Login */}
+      <Route path="/login/customer" element={<LoginCustomer />} />
+      <Route path="/login/merchant" element={<LoginMerchant />} />
+      <Route path="/login/admin" element={<LoginAdmin />} />
+
+      {/* Register */}
+      <Route path="/register/customer" element={<RegisterCustomer />} />
+      <Route path="/register/merchant" element={<RegisterMerchant />} />
+
+      {/* Sau khi đăng nhập */}
+      <Route path="/customer/home" element={<CustomerHome />} />
+      <Route path="/merchant/dashboard" element={<MerchantDashboard />} />
+      <Route path="/admin" element={<AdminDashboard />} />
     </Router>
   );
 }

@@ -13,36 +13,36 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:3000/api/login', {
+      const res = await fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
+
       const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem('user', JSON.stringify(data.user));
-        toast.success('Đăng nhập thành công 🎉');
-        setTimeout(() => navigate('/home'), 1000);
-      } else {
-        toast.error(data.message || 'Sai email hoặc mật khẩu');
-      }
-    } catch  {
+      if (!res.ok)
+        return toast.error(data.message || 'Sai email hoặc mật khẩu');
+
+      // ✅ Lưu token và thông tin user
+      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      toast.success('Đăng nhập thành công');
+      setTimeout(() => navigate('/customer/home'), 1000);
+    } catch {
       toast.error('Lỗi kết nối server');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      {/* 1. Lớp ảnh nền (nằm dưới cùng) */}
+      \{' '}
       <div className="absolute inset-0 bg-[url('/food-delivery-bg.jpg')] bg-cover bg-center" />
-
-      {/* 2. Lớp màu trắng đục phủ lên ảnh */}
       <div
         className="absolute inset-0 bg-white opacity-70" // bg-white và opacity-70 (70% đục)
       />
       <Toaster position="top-center" reverseOrder={false} />
-
       {/* Khung chính */}
       <div className="flex w-[900px] bg-white rounded-2xl shadow-2xl overflow-hidden relative z-10">
         {/* Bên trái */}

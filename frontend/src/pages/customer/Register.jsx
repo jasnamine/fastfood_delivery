@@ -27,36 +27,30 @@ const Register = () => {
     }
 
     try {
-      // 3. Dùng "fetch" để gửi dữ liệu lên backend
-      const res = await fetch('http://localhost:3000/auth/register', {
-        // <-- Sửa lại URL nếu cần
+      const res = await fetch('http://localhost:3000/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // Chỉ gửi những gì server cần (không gửi confirmPassword)
         body: JSON.stringify({
-          username: username,
           email: email,
           password: password,
+          role: 'customer',
         }),
       });
 
-      // 4. Lấy phản hồi từ server (ví dụ: { success: true } hoặc { message: 'Email đã tồn tại' })
       const data = await res.json();
-
-      // 5. Kiểm tra xem server có báo lỗi không (ví dụ: email đã tồn tại)
       if (!res.ok) {
-        // res.ok là false nếu HTTP status là 4xx hoặc 5xx
         toast.error(data.message || 'Đăng ký thất bại.');
         return;
       }
 
-      // 6. CHỈ KHI MỌI THỨ THÀNH CÔNG, mới báo toast và chuyển trang
-      toast.success('Đăng ký thành công! Đang chuyển đến trang đăng nhập...');
+      toast.success(
+        'Đăng ký thành công! vui lòng kiểm tra email để xác minh OTP',
+      );
       setTimeout(() => {
-        navigate('/login');
-      }, 1500);
+        navigate('/login/customer');
+      }, 2000);
     } catch (err) {
       // 7. Xử lý lỗi (ví dụ: server sập, không kết nối được mạng)
       console.error(err);
@@ -90,21 +84,16 @@ const Register = () => {
           </h3>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Username */}
             <div>
-              <label
-                htmlFor="username"
-                className="block text-gray-700 text-sm font-medium mb-1 text-left"
-              >
+              <label className="block text-gray-700 text-sm font-medium mb-1">
                 Tên người dùng
               </label>
               <input
                 type="text"
-                id="username"
-                placeholder="Nhập tên của bạn"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                placeholder="Nhập tên"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 required
               />
             </div>

@@ -1,10 +1,10 @@
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { AllExceptionFilter } from './common/filters/all-exception.filter';
 import { TransformInterceptor } from './common/interceptors/response.interceptor';
-import { Sequelize } from 'sequelize';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,12 +13,15 @@ async function bootstrap() {
 
   const configService = new ConfigService();
 
+  app.setGlobalPrefix('/api/v1');
+
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // xóa các field dư trong payload (DTO)
-      forbidNonWhitelisted: true, // báo lỗi dư field trong payload
-      transform: true, // chuyển payload thành instance của DTO
-      // transformOptions: {enableImplicitConversion: true} // cho phép transform dữ liệu của file
+      whitelist: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true, // Cho phép ép kiểu tự động
+      },
     }),
   );
 
@@ -31,11 +34,30 @@ async function bootstrap() {
     credentials: true,
   });
 
+  const config = new DocumentBuilder()
+    .setTitle('FastFood Delivery APIs')
+    .setDescription('Build APIs for fastfood delivery website')
+    .setVersion('1.0')
+    .addBearerAuth(
+      // Thêm dòng này để bật JWT trong Swagger
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        description: 'Nhập token dạng: Bearer <jwt_token>',
+        in: 'header',
+      },
+      'access-token', // Tên định danh
+    )
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/v1/docs', app, document);
+
   const port = configService.get<string>('PORT') || 3000;
 
   logger.log(`Server started on ${port}`);
-
-  
+  logger.log(`Swagger running on http://localhost:${port}/api/v1/docs`);
 
   await app.listen(port);
 }

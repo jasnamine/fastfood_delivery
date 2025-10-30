@@ -13,7 +13,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!username || !email || !password || !confirmPassword) {
@@ -26,11 +26,42 @@ const Register = () => {
       return;
     }
 
-    toast.success('Đăng ký thành công');
+    try {
+      // 3. Dùng "fetch" để gửi dữ liệu lên backend
+      const res = await fetch('http://localhost:3000/auth/register', {
+        // <-- Sửa lại URL nếu cần
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Chỉ gửi những gì server cần (không gửi confirmPassword)
+        body: JSON.stringify({
+          username: username,
+          email: email,
+          password: password,
+        }),
+      });
 
-    setTimeout(() => {
-      navigate('/login');
-    }, 1500);
+      // 4. Lấy phản hồi từ server (ví dụ: { success: true } hoặc { message: 'Email đã tồn tại' })
+      const data = await res.json();
+
+      // 5. Kiểm tra xem server có báo lỗi không (ví dụ: email đã tồn tại)
+      if (!res.ok) {
+        // res.ok là false nếu HTTP status là 4xx hoặc 5xx
+        toast.error(data.message || 'Đăng ký thất bại.');
+        return;
+      }
+
+      // 6. CHỈ KHI MỌI THỨ THÀNH CÔNG, mới báo toast và chuyển trang
+      toast.success('Đăng ký thành công! Đang chuyển đến trang đăng nhập...');
+      setTimeout(() => {
+        navigate('/login');
+      }, 1500);
+    } catch (err) {
+      // 7. Xử lý lỗi (ví dụ: server sập, không kết nối được mạng)
+      console.error(err);
+      toast.error('Không thể kết nối đến máy chủ. Vui lòng thử lại sau.');
+    }
   };
 
   return (

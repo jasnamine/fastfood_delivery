@@ -1,20 +1,34 @@
 import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (email === 'admin@gmail.com' && password === '123456') {
-      toast.success('Đăng nhập thành công');
-    } else {
-      toast.error('Sai email hoặc mật khẩu');
+    try {
+      const res = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+        toast.success('Đăng nhập thành công 🎉');
+        setTimeout(() => navigate('/home'), 1000);
+      } else {
+        toast.error(data.message || 'Sai email hoặc mật khẩu');
+      }
+    } catch  {
+      toast.error('Lỗi kết nối server');
     }
   };
 

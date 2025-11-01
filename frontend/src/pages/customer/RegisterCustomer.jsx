@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 
 const Register = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,7 +15,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!username || !email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword) {
       toast.error('Vui lòng điền đầy đủ thông tin');
       return;
     }
@@ -27,7 +26,7 @@ const Register = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/user/register', {
+      const res = await fetch('http://localhost:3000/api/v1/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +48,7 @@ const Register = () => {
         'Đăng ký thành công! vui lòng kiểm tra email để xác minh OTP',
       );
       setTimeout(() => {
-        navigate('/login/customer');
+        navigate('./verifyOTP', { state: { email: email } });
       }, 2000);
     } catch (err) {
       // 7. Xử lý lỗi (ví dụ: server sập, không kết nối được mạng)
@@ -84,20 +83,6 @@ const Register = () => {
           </h3>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-gray-700 text-sm font-medium mb-1">
-                Tên người dùng
-              </label>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Nhập tên"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-                required
-              />
-            </div>
-
             {/* Email */}
             <div>
               <label
@@ -133,8 +118,8 @@ const Register = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                            focus:ring-2 focus:ring-green-500 focus:border-green-500 
-                            outline-none pr-10"
+                                focus:ring-2 focus:ring-green-500 focus:border-green-500 
+                                outline-none pr-10"
                   required
                 />
                 <button
@@ -163,8 +148,8 @@ const Register = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg 
-                            focus:ring-2 focus:ring-green-500 focus:border-green-500 
-                            outline-none pr-10"
+                                focus:ring-2 focus:ring-green-500 focus:border-green-500 
+                                outline-none pr-10"
                   required
                 />
                 <button
@@ -194,7 +179,7 @@ const Register = () => {
           <p className="text-sm text-gray-600 text-center mt-6">
             Đã có tài khoản?{' '}
             <Link
-              to="/login"
+              to="/login/customer"
               className="text-emerald-600 font-medium hover:underline"
             >
               Đăng nhập ngay
@@ -205,5 +190,4 @@ const Register = () => {
     </div>
   );
 };
-
 export default Register;

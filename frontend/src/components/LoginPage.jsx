@@ -6,7 +6,7 @@ import clsx from 'clsx';
 
 const Login = ({
   userType = 'customer', // 'customer' hoặc 'merchant'
-  loginEndpoint = 'http://localhost:3000/auth/login',
+  loginEndpoint = 'http://localhost:3000/api/v1/auth/login',
   redirectPath = '/customer/home',
 }) => {
   const navigate = useNavigate();
@@ -33,11 +33,11 @@ const Login = ({
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Sai email hoặc mật khẩu');
 
-      localStorage.setItem('token', data.access_token);
+      localStorage.setItem('token', data.data.accessToken);
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('userType', userType);
 
-      toast.success('Đăng nhập thành công 🎉');
+      toast.success('Đăng nhập thành công');
       setTimeout(() => navigate(redirectPath), 1000);
     } catch (error) {
       toast.error(error.message || 'Lỗi kết nối server');
@@ -104,7 +104,7 @@ const Login = ({
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-left text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
               <input
@@ -127,7 +127,7 @@ const Login = ({
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-left text-sm font-medium text-gray-700 mb-1">
                 Mật khẩu
               </label>
               <div className="relative">
@@ -173,7 +173,11 @@ const Login = ({
           <p className="text-sm text-gray-600 text-center mt-6">
             Chưa có tài khoản?{' '}
             <Link
-              to={userType === 'merchant' ? '/register-merchant' : '/register'}
+              to={
+                userType === 'merchant'
+                  ? '/register/merchant'
+                  : '/register/customer'
+              }
               className={clsx(
                 'font-medium hover:underline',
                 primaryColor === 'emerald' && 'text-emerald-600',

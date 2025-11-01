@@ -1,19 +1,18 @@
-
-import { useState } from "react";
-import { createCategory } from "../api/categoryApi";
+import { useState } from 'react';
+import { createCategory } from '../../api/categoryApi';
 
 export default function Category() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [isActive, setIsActive] = useState(1);
   const [merchantId, setMerchantId] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage("");
+    setMessage('');
 
     try {
       const newCategory = await createCategory({
@@ -23,8 +22,8 @@ export default function Category() {
         merchantId,
       });
       setMessage(`Category created with ID: ${newCategory.id}`);
-    } catch (err) {
-      setMessage("Failed to create category.");
+    } catch {
+      setMessage('Failed to create category.');
     } finally {
       setLoading(false);
     }
@@ -66,7 +65,7 @@ export default function Category() {
         />
       </div>
       <button type="submit" disabled={loading}>
-        {loading ? "Creating..." : "Create Category"}
+        {loading ? 'Creating...' : 'Create Category'}
       </button>
       {message && <p>{message}</p>}
     </form>

@@ -12,7 +12,7 @@ const CustomerLogin = () => (
       title: 'FASTFOOD DELIVERY',
       description:
         'Đăng nhập để truy cập vào hệ thống đặt món nhanh chóng và tiện lợi.',
-      registerLink: '/register',
+      registerLink: '/register/customer',
     }}
   />
 );

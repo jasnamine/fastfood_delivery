@@ -2,15 +2,21 @@ import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import clsx from 'clsx';
 
 const Login = ({
   userType = 'customer', // 'customer' hoặc 'merchant'
   loginEndpoint = 'http://localhost:3000/api/v1/auth/login',
-  redirectPath = '/customer/home',
+  theme,
 }) => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const { loginAction } = useAuth();
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    role: userType,
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -32,13 +38,28 @@ const Login = ({
 
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Sai email hoặc mật khẩu');
+      console.log('Dữ liệu từ API:', data);
+      console.log('Dữ liệu từ API:', data);
 
-      localStorage.setItem('token', data.data.accessToken);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      const token = data.data?.accessToken; // 👈 lấy token đúng field
+      if (!token)
+        throw new Error('Không tìm thấy access token trong phản hồi API');
+
+      loginAction(data);
+
+      localStorage.setItem('token', data.accessToken);
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      } else {
+        localStorage.removeItem('user');
+      }
+
       localStorage.setItem('userType', userType);
 
       toast.success('Đăng nhập thành công');
-      setTimeout(() => navigate(redirectPath), 1000);
+      const path =
+        userType === 'merchant' ? '/merchant/home' : '/customer/home';
+      setTimeout(() => navigate(path), 1000);
     } catch (error) {
       toast.error(error.message || 'Lỗi kết nối server');
     } finally {

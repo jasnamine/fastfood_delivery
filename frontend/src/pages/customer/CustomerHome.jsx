@@ -2,16 +2,18 @@ import React, { useRef, useState, useEffect } from 'react';
 import Nav from '../../components/Nav';
 import { categories } from '../../category';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { useAuth } from '../../context/AuthContext';
 import CategoryCard from '../../components/CategoryCart';
 import FoodCard from '../../components/FoodCart';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 function CustomerHome() {
+  const navigate = useNavigate();
+  const { userData } = useAuth();
   const { city, shopsOfCity, itemsOfCity, searchItems } = useSelector(
     (state) => state.user,
   );
-  const navigate = useNavigate();
   const cateScrollRef = useRef(null);
   const shopScrollRef = useRef(null);
   const [updatedItemsList, setUpdatedItemslist] = useState([]);
@@ -67,15 +69,15 @@ function CustomerHome() {
   }, [categories, shopsOfCity]);
 
   useEffect(() => {
-    setUpdatedItemslist(itemsOfCity);
-  }, [itemsOfCity]);
+    if (!userData) navigate('/login/customer');
+  }, [userData, navigate]);
 
   return (
     <div className="min-h-screen w-full bg-gray-50 flex flex-col items-center overflow-y-auto">
       <Nav />
 
       {/* Wrapper tổng thể nội dung */}
-      <div className="w-full max-w-7xl px-6 py-8 flex flex-col gap-10">
+      <div className="w-full max-w-7xl px-6 pt-28 pb-8 flex flex-col gap-10 ">
         {/* Search Results */}
         {searchItems && searchItems.length > 0 && (
           <div className="bg-white shadow-md rounded-2xl p-6">

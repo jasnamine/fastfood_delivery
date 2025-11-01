@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 export const axiosWrapper = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: 'http://localhost:3000/api/v1',
   withCredentials: true,
   headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
   },
 });

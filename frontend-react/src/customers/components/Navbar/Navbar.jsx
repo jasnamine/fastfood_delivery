@@ -53,6 +53,10 @@ const Navbar = () => {
     navigate("/");
   };
 
+  const navigateToPartner = () => {
+    navigate("/partner");
+  };
+
   const handleLogout = () => {
     dispatch(logout());
     handleCloseMenu();
@@ -65,14 +69,18 @@ const Navbar = () => {
           onClick={navigateToHome}
           className="lg:mr-10 cursor-pointer flex items-center space-x-4"
         >
-          <li className="">
-            FastFood
-          </li>
+          <li className="">FastFood</li>
         </div>
 
         {/* <li className="font font-semibold">Home</li> */}
       </div>
       <div className="flex items-center space-x-2 lg:space-x-10">
+        <div
+          onClick={navigateToPartner}
+          className="flex items-center space-x-2 cursor-pointer"
+        >
+          Trở thành đối tác
+        </div>
         <div className="flex items-center space-x-2">
           {user?.data?.email ? (
             <span

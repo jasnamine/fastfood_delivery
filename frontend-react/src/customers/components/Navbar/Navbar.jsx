@@ -41,7 +41,7 @@ const Navbar = () => {
   };
 
   const navigateToProfile = (e) => {
-    user?.data?.roles[0] == "customer"
+    user?.data?.roles[0] === "customer"
       ? navigate("/my-profile")
       : navigate("/admin/restaurant");
   };
@@ -65,9 +65,9 @@ const Navbar = () => {
           onClick={navigateToHome}
           className="lg:mr-10 cursor-pointer flex items-center space-x-4"
         >
-          {/* <li className="">
-            <img src="/nav5.jpg" alt="Logo" className="h-12 w-12" />
-          </li> */}
+          <li className="">
+            FastFood
+          </li>
         </div>
 
         {/* <li className="font font-semibold">Home</li> */}

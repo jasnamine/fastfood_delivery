@@ -65,7 +65,7 @@ export const EditDishModal = ({ dish, onClose, onSave }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[92vh] overflow-y-auto text-gray-800">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-orange-50 to-white">
           <h2 className="text-2xl font-bold text-gray-800">

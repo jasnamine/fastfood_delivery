@@ -33,7 +33,7 @@ const CustomerRoutes = () => {
         <Route exact path="/register" element={<RegistrationForm />} />
         <Route exact path="/verify" element={<Verify />} />
         <Route exact path="/partner" element={<Partner />} />
-        <Route exact path="/merchant" element={<CreateMerchantForm />} />
+        <Route exact path="/register-merchant" element={<CreateMerchantForm />} />
         <Route exact path="/orders" element={<Orders />} />
         <Route
           exact
